@@ -1,0 +1,6 @@
+{
+    "pid_file": "./tmp/ipqueryd.pid",
+    "server_type": "http",
+    "server_port": ":8090",
+    "data_file": "./tmp/ip_chunzhen.txt"
+}
