@@ -1,22 +1,28 @@
 package main
 
 import (
-	"net"
 	"strings"
-
-	"github.com/tabalt/ipquery"
-	"golang.org/x/net/context"
-	"google.golang.org/grpc"
+	"sync"
 
 	"pb"
 )
 
+// import for http
 import (
 	"encoding/json"
 	"html"
 	"net/http"
 
 	"github.com/tabalt/gracehttp"
+)
+
+// import for grpc
+import (
+	"net"
+
+	"github.com/tabalt/ipquery"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 )
 
 type ipQueryServer struct {
@@ -43,29 +49,27 @@ func startServer(conf *Conf) error {
 		return err
 	}
 
-	var srvErr error = nil
+	var wg sync.WaitGroup
 
-	if srvErr == nil && conf.HttpServerPort != "" {
-		srvErr = startHttpServer(conf.HttpServerPort)
+	if conf.HttpServerPort != "" {
+		wg.Add(1)
+		go func() {
+			err = startHttpServer(conf.HttpServerPort)
+			wg.Done()
+		}()
 	}
 
-	if srvErr == nil && conf.GrpcServerPort != "" {
-		srvErr = startGrpcServer(conf.GrpcServerPort)
+	if conf.GrpcServerPort != "" {
+		wg.Add(1)
+		go func() {
+			err = startGrpcServer(conf.GrpcServerPort)
+			wg.Done()
+		}()
 	}
 
-	return srvErr
-}
+	wg.Wait()
 
-func startGrpcServer(addr string) error {
-	listener, err := net.Listen("tcp", addr)
-	if err != nil {
-		return err
-	}
-
-	grpcServer := grpc.NewServer()
-	pb.RegisterIpQueryServer(grpcServer, newIpQueryServer())
-
-	return grpcServer.Serve(listener)
+	return err
 }
 
 func startHttpServer(addr string) error {
@@ -86,4 +90,16 @@ func startHttpServer(addr string) error {
 	})
 
 	return gracehttp.ListenAndServe(addr, nil)
+}
+
+func startGrpcServer(addr string) error {
+	listener, err := net.Listen("tcp", addr)
+	if err != nil {
+		return err
+	}
+
+	grpcServer := grpc.NewServer()
+	pb.RegisterIpQueryServer(grpcServer, newIpQueryServer())
+
+	return grpcServer.Serve(listener)
 }
