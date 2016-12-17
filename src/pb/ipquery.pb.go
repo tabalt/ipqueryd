@@ -9,8 +9,8 @@ It is generated from these files:
 	ipquery.proto
 
 It has these top-level messages:
-	FindParams
-	FindResult
+	IpFindRequest
+	IpFindReply
 */
 package pb
 
@@ -34,32 +34,32 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type FindParams struct {
+type IpFindRequest struct {
 	Ip string `protobuf:"bytes,1,opt,name=ip" json:"ip,omitempty"`
 }
 
-func (m *FindParams) Reset()                    { *m = FindParams{} }
-func (m *FindParams) String() string            { return proto.CompactTextString(m) }
-func (*FindParams) ProtoMessage()               {}
-func (*FindParams) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (m *IpFindRequest) Reset()                    { *m = IpFindRequest{} }
+func (m *IpFindRequest) String() string            { return proto.CompactTextString(m) }
+func (*IpFindRequest) ProtoMessage()               {}
+func (*IpFindRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-func (m *FindParams) GetIp() string {
+func (m *IpFindRequest) GetIp() string {
 	if m != nil {
 		return m.Ip
 	}
 	return ""
 }
 
-type FindResult struct {
+type IpFindReply struct {
 	Data []string `protobuf:"bytes,1,rep,name=data" json:"data,omitempty"`
 }
 
-func (m *FindResult) Reset()                    { *m = FindResult{} }
-func (m *FindResult) String() string            { return proto.CompactTextString(m) }
-func (*FindResult) ProtoMessage()               {}
-func (*FindResult) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (m *IpFindReply) Reset()                    { *m = IpFindReply{} }
+func (m *IpFindReply) String() string            { return proto.CompactTextString(m) }
+func (*IpFindReply) ProtoMessage()               {}
+func (*IpFindReply) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
-func (m *FindResult) GetData() []string {
+func (m *IpFindReply) GetData() []string {
 	if m != nil {
 		return m.Data
 	}
@@ -67,8 +67,8 @@ func (m *FindResult) GetData() []string {
 }
 
 func init() {
-	proto.RegisterType((*FindParams)(nil), "pb.FindParams")
-	proto.RegisterType((*FindResult)(nil), "pb.FindResult")
+	proto.RegisterType((*IpFindRequest)(nil), "pb.IpFindRequest")
+	proto.RegisterType((*IpFindReply)(nil), "pb.IpFindReply")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -82,8 +82,8 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for IpQuery service
 
 type IpQueryClient interface {
-	// find out ip query result
-	Find(ctx context.Context, in *FindParams, opts ...grpc.CallOption) (*FindResult, error)
+	// find ip location data
+	Find(ctx context.Context, in *IpFindRequest, opts ...grpc.CallOption) (*IpFindReply, error)
 }
 
 type ipQueryClient struct {
@@ -94,8 +94,8 @@ func NewIpQueryClient(cc *grpc.ClientConn) IpQueryClient {
 	return &ipQueryClient{cc}
 }
 
-func (c *ipQueryClient) Find(ctx context.Context, in *FindParams, opts ...grpc.CallOption) (*FindResult, error) {
-	out := new(FindResult)
+func (c *ipQueryClient) Find(ctx context.Context, in *IpFindRequest, opts ...grpc.CallOption) (*IpFindReply, error) {
+	out := new(IpFindReply)
 	err := grpc.Invoke(ctx, "/pb.IpQuery/Find", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -106,8 +106,8 @@ func (c *ipQueryClient) Find(ctx context.Context, in *FindParams, opts ...grpc.C
 // Server API for IpQuery service
 
 type IpQueryServer interface {
-	// find out ip query result
-	Find(context.Context, *FindParams) (*FindResult, error)
+	// find ip location data
+	Find(context.Context, *IpFindRequest) (*IpFindReply, error)
 }
 
 func RegisterIpQueryServer(s *grpc.Server, srv IpQueryServer) {
@@ -115,7 +115,7 @@ func RegisterIpQueryServer(s *grpc.Server, srv IpQueryServer) {
 }
 
 func _IpQuery_Find_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FindParams)
+	in := new(IpFindRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func _IpQuery_Find_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/pb.IpQuery/Find",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IpQueryServer).Find(ctx, req.(*FindParams))
+		return srv.(IpQueryServer).Find(ctx, req.(*IpFindRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,14 +150,14 @@ func init() { proto.RegisterFile("ipquery.proto", fileDescriptor0) }
 var fileDescriptor0 = []byte{
 	// 166 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0xcd, 0x2c, 0x28, 0x2c,
-	0x4d, 0x2d, 0xaa, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x92, 0xe1,
-	0xe2, 0x72, 0xcb, 0xcc, 0x4b, 0x09, 0x48, 0x2c, 0x4a, 0xcc, 0x2d, 0x16, 0xe2, 0xe3, 0x62, 0xca,
-	0x2c, 0x90, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x62, 0xca, 0x2c, 0x50, 0x52, 0x80, 0xc8, 0x06,
-	0xa5, 0x16, 0x97, 0xe6, 0x94, 0x08, 0x09, 0x71, 0xb1, 0xa4, 0x24, 0x96, 0x24, 0x4a, 0x30, 0x2a,
-	0x30, 0x6b, 0x70, 0x06, 0x81, 0xd9, 0x46, 0xc6, 0x5c, 0xec, 0x9e, 0x05, 0x81, 0x20, 0x43, 0x85,
-	0x34, 0xb8, 0x58, 0x40, 0x8a, 0x85, 0xf8, 0xf4, 0x0a, 0x92, 0xf4, 0x10, 0x86, 0x4a, 0xc1, 0xf9,
-	0x10, 0x63, 0x94, 0x18, 0x9c, 0x34, 0xb8, 0xc4, 0xf2, 0x52, 0x4b, 0xf4, 0x4a, 0x12, 0x93, 0x12,
-	0x73, 0x4a, 0xf4, 0xa0, 0x8e, 0x4a, 0xd1, 0x2b, 0x48, 0x72, 0xe2, 0x81, 0x1a, 0x16, 0x00, 0x72,
-	0x60, 0x00, 0x63, 0x12, 0x1b, 0xd8, 0xa5, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x8f, 0xf9,
-	0x04, 0x02, 0xba, 0x00, 0x00, 0x00,
+	0x4d, 0x2d, 0xaa, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x92, 0xe7,
+	0xe2, 0xf5, 0x2c, 0x70, 0xcb, 0xcc, 0x4b, 0x09, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0xe2,
+	0xe3, 0x62, 0xca, 0x2c, 0x90, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x62, 0xca, 0x2c, 0x50, 0x52,
+	0xe4, 0xe2, 0x86, 0x29, 0x28, 0xc8, 0xa9, 0x14, 0x12, 0xe2, 0x62, 0x49, 0x49, 0x2c, 0x49, 0x94,
+	0x60, 0x54, 0x60, 0xd6, 0xe0, 0x0c, 0x02, 0xb3, 0x8d, 0xcc, 0xb9, 0xd8, 0x3d, 0x0b, 0x02, 0x41,
+	0x06, 0x0b, 0xe9, 0x70, 0xb1, 0x80, 0xd4, 0x0a, 0x09, 0xea, 0x15, 0x24, 0xe9, 0xa1, 0x18, 0x2c,
+	0xc5, 0x8f, 0x2c, 0x54, 0x90, 0x53, 0xa9, 0xc4, 0xe0, 0xa4, 0xcc, 0x25, 0x96, 0x97, 0x5a, 0xa2,
+	0x57, 0x92, 0x98, 0x94, 0x98, 0x53, 0xa2, 0x07, 0x75, 0x5c, 0x8a, 0x5e, 0x41, 0x92, 0x13, 0xcc,
+	0xc0, 0x00, 0xc6, 0x24, 0x36, 0xb0, 0x63, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x87, 0x4b,
+	0x5a, 0x06, 0xbd, 0x00, 0x00, 0x00,
 }
