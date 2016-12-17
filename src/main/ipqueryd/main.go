@@ -32,10 +32,10 @@ func main() {
 	}
 
 	// start server
-	log.Printf("try to start ipqueryd %s server. ", conf.ServerType)
-	srvErr := startServer(conf.DataFile, conf.ServerType, conf.ServerPort)
+	log.Printf("try to start ipqueryd server. ")
+	srvErr := startServer(conf)
 	if srvErr != nil {
-		log.Printf("ipqueryd server stopped, error: %v", conf.ServerType, srvErr)
+		log.Printf("ipqueryd server stopped, error: %v", srvErr)
 		os.Exit(1)
 	}
 

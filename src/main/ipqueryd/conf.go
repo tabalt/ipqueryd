@@ -7,11 +7,10 @@ import (
 
 type Conf struct {
 	PidFile string `json:"pid_file"`
-	LogFile string `json:"log_file"`
 
-	ServerType string `json:"server_type"`
-	ServerPort string `json:"server_port"`
-	DataFile   string `json:"data_file"`
+	HttpServerPort string `json:"http_server_port"`
+	GrpcServerPort string `json:"grpc_server_port"`
+	DataFile       string `json:"data_file"`
 }
 
 // parse config for ipqueryd

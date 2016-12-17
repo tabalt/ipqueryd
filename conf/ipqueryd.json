@@ -1,6 +1,6 @@
 {
     "pid_file": "./tmp/ipqueryd.pid",
-    "server_type": "http",
-    "server_port": ":8090",
+    "http_server_port": ":12101",
+    "grpc_server_port": ":12102",
     "data_file": "./tmp/ip_chunzhen.txt"
 }

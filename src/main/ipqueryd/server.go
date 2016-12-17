@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"net"
 	"strings"
 
@@ -38,25 +37,23 @@ func (iqs *ipQueryServer) Find(ctx context.Context, params *pb.FindParams) (*pb.
 	}, nil
 }
 
-const (
-	ServerTypeGrpc = "grpc"
-	ServerTypeHttp = "http"
-)
-
-func startServer(df string, st string, addr string) error {
-	err := ipquery.Load(df)
+func startServer(conf *Conf) error {
+	err := ipquery.Load(conf.DataFile)
 	if err != nil {
 		return err
 	}
 
-	switch st {
-	case ServerTypeGrpc:
-		return startGrpcServer(addr)
-	case ServerTypeHttp:
-		return startHttpServer(addr)
-	default:
-		return errors.New("start server failed, unknown type: " + st)
+	var srvErr error = nil
+
+	if srvErr == nil && conf.HttpServerPort != "" {
+		srvErr = startHttpServer(conf.HttpServerPort)
 	}
+
+	if srvErr == nil && conf.GrpcServerPort != "" {
+		srvErr = startGrpcServer(conf.GrpcServerPort)
+	}
+
+	return srvErr
 }
 
 func startGrpcServer(addr string) error {
