@@ -78,15 +78,25 @@ func startHttpServer(addr string) error {
 
 	iqs := newIpQueryServer()
 	http.HandleFunc("/find", func(w http.ResponseWriter, r *http.Request) {
-		ip := html.EscapeString(r.FormValue("ip"))
+		ip := getQueryFromRequest(r, "ip", "")
 
 		result, err := iqs.Find(context.TODO(), &pb.IpFindRequest{Ip: ip})
 		if err != nil {
 			result = &pb.IpFindReply{Data: nil}
 		}
-
 		resp, _ := json.Marshal(result)
-		w.Write(resp)
+
+		var output []byte
+		if cbk := getQueryFromRequest(r, "_callback", ""); cbk != "" {
+			lb, rb := []byte(cbk+"("), []byte(");")
+
+			output = make([]byte, 0, (len(lb) + len(resp) + len(rb)))
+			output = append(append(append(output, lb...), resp...), rb...)
+		} else {
+			output = resp
+		}
+
+		w.Write(output)
 	})
 
 	return gracehttp.ListenAndServe(addr, nil)
@@ -102,4 +112,12 @@ func startGrpcServer(addr string) error {
 	pb.RegisterIpQueryServer(grpcServer, newIpQueryServer())
 
 	return grpcServer.Serve(listener)
+}
+
+func getQueryFromRequest(r *http.Request, key, defaultValue string) string {
+	value := html.EscapeString(r.FormValue(key))
+	if value == "" {
+		value = defaultValue
+	}
+	return value
 }
